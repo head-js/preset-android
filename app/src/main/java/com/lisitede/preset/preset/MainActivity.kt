@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
 
     private lateinit var connectivityHelper: ConnectivityHelper
+    private lateinit var deviceInfoHelper: DeviceInfoHelper
     private lateinit var statusText: TextView
+    private lateinit var deviceInfoText: TextView
     private lateinit var logText: TextView
     private lateinit var logBuilder: StringBuilder
 
@@ -17,12 +19,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         connectivityHelper = ConnectivityHelper(this)
+        deviceInfoHelper = DeviceInfoHelper()
         logBuilder = StringBuilder()
 
         statusText = TextView(this).apply {
             text = "Network: checking..."
             textSize = 24f
             setPadding(48, 48, 48, 24)
+        }
+
+        deviceInfoText = TextView(this).apply {
+            text = deviceInfoHelper.getDisplayString()
+            textSize = 14f
+            setPadding(48, 24, 48, 24)
         }
 
         logText = TextView(this).apply {
@@ -35,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             addView(statusText)
+            addView(deviceInfoText)
             addView(scrollView)
         }
 

@@ -10,8 +10,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var connectivityHelper: ConnectivityHelper
     private lateinit var deviceInfoHelper: DeviceInfoHelper
+    private lateinit var packageInfoHelper: PackageInfoHelper
     private lateinit var statusText: TextView
     private lateinit var deviceInfoText: TextView
+    private lateinit var packageInfoText: TextView
     private lateinit var logText: TextView
     private lateinit var logBuilder: StringBuilder
 
@@ -20,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         connectivityHelper = ConnectivityHelper(this)
         deviceInfoHelper = DeviceInfoHelper()
+        packageInfoHelper = PackageInfoHelper(this)
         logBuilder = StringBuilder()
 
         statusText = TextView(this).apply {
@@ -30,6 +33,12 @@ class MainActivity : AppCompatActivity() {
 
         deviceInfoText = TextView(this).apply {
             text = deviceInfoHelper.getDisplayString()
+            textSize = 14f
+            setPadding(48, 24, 48, 24)
+        }
+
+        packageInfoText = TextView(this).apply {
+            text = packageInfoHelper.getDisplayString()
             textSize = 14f
             setPadding(48, 24, 48, 24)
         }
@@ -45,6 +54,7 @@ class MainActivity : AppCompatActivity() {
             orientation = LinearLayout.VERTICAL
             addView(statusText)
             addView(deviceInfoText)
+            addView(packageInfoText)
             addView(scrollView)
         }
 

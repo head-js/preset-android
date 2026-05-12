@@ -9,9 +9,9 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 
-class WebViewHelper(context: Context) {
+class WebViewHelper(private val context: Context) {
 
-    val webView: WebView = WebView(context)
+    lateinit var webView: WebView
 
     var onPageStarted: ((String) -> Unit)? = null
     var onPageFinished: ((String) -> Unit)? = null

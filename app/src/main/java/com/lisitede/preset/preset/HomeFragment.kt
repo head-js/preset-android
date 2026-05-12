@@ -32,8 +32,6 @@ class HomeFragment : Fragment() {
     private lateinit var authStatusText: TextView
     private lateinit var logoutButton: Button
     private lateinit var statusText: TextView
-    private lateinit var deviceInfoText: TextView
-    private lateinit var packageInfoText: TextView
     private lateinit var logText: TextView
     private lateinit var postButton: Button
     private lateinit var countText: TextView
@@ -57,19 +55,11 @@ class HomeFragment : Fragment() {
         authStatusText = view.findViewById(R.id.authStatusText)
         logoutButton = view.findViewById(R.id.logoutButton)
         statusText = view.findViewById(R.id.statusText)
-        deviceInfoText = view.findViewById(R.id.deviceInfoText)
-        packageInfoText = view.findViewById(R.id.packageInfoText)
         logText = view.findViewById(R.id.logText)
 
         logoutButton.setOnClickListener {
             authViewModel.logout()
         }
-
-        val info = DeviceInfoHelper().getDeviceInfo()
-        deviceInfoText.text = "Device: ${info.brand} ${info.model} / Android ${info.androidVersion}"
-
-        val pkgInfo = PackageInfoHelper(requireContext()).getAppPackageInfo()
-        packageInfoText.text = "App: ${pkgInfo.packageName} ${pkgInfo.versionName}(${pkgInfo.versionCode})"
 
         view.findViewById<Button>(R.id.postButton).also { postButton = it }.setOnClickListener {
             appendLog("POST sending...")
@@ -78,9 +68,6 @@ class HomeFragment : Fragment() {
         countText = view.findViewById(R.id.countText)
         view.findViewById<Button>(R.id.decrementButton).setOnClickListener { viewModel.decrement() }
         view.findViewById<Button>(R.id.incrementButton).setOnClickListener { viewModel.increment() }
-        view.findViewById<Button>(R.id.navigateButton).setOnClickListener {
-            findNavController().navigate(R.id.action_home_to_detail)
-        }
 
         webViewHelper.onPageStarted = { url -> appendLog("WebView loading: $url") }
         webViewHelper.onPageFinished = { url -> appendLog("WebView loaded: $url") }

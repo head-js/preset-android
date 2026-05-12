@@ -18,10 +18,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.lisitede.preset.preset.HomeFragment"
-        android:label="Home">
-        <action
-            android:id="@+id/action_home_to_detail"
-            app:destination="@id/detailFragment" />
+        android:label="首页">
         <action
             android:id="@+id/action_home_to_login"
             app:destination="@id/loginFragment"
@@ -32,6 +29,11 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.lisitede.preset.preset.DetailFragment"
-        android:label="Detail" />
+        android:label="详情" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.lisitede.preset.preset.ProfileFragment"
+        android:label="个人" />
 
 </navigation>

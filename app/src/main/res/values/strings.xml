@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Preset Android</string>
+    <string name="tab_home">首页</string>
+    <string name="tab_detail">详情</string>
+    <string name="tab_profile">个人</string>
 </resources>

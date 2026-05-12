@@ -3,7 +3,8 @@ package com.lisitede.preset.preset
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.NavGraph
+import androidx.navigation.ui.NavigationUI
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,5 +27,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.setGraph(graph, intent.extras)
+
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
+        NavigationUI.setupWithNavController(bottomNav, navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.loginFragment) {
+                bottomNav.visibility = BottomNavigationView.GONE
+            } else {
+                bottomNav.visibility = BottomNavigationView.VISIBLE
+            }
+        }
     }
 }

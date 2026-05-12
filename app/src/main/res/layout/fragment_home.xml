@@ -40,24 +40,6 @@
         android:text="Net: checking..."
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/deviceInfoText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="4dp"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/packageInfoText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="4dp"
-        android:textSize="14sp" />
-
     <Button
         android:id="@+id/postButton"
         android:layout_width="wrap_content"
@@ -93,13 +75,6 @@
             android:layout_height="wrap_content"
             android:text="+" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/navigateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="Go to Detail" />
 
     <ScrollView
         android:layout_width="match_parent"

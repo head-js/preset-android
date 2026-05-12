@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -21,8 +22,15 @@ class HomeFragment : Fragment() {
         HomeViewModel.Factory(requireActivity().getSharedPreferences("preset_prefs", 0))
     }
 
+    private val authViewModel: AuthViewModel by activityViewModels {
+        val prefs = requireActivity().getSharedPreferences("preset_prefs", 0)
+        AuthViewModel.Factory(TokenStorage(prefs), AuthRepository())
+    }
+
     private lateinit var connectivityHelper: ConnectivityHelper
     private lateinit var webViewHelper: WebViewHelper
+    private lateinit var authStatusText: TextView
+    private lateinit var logoutButton: Button
     private lateinit var statusText: TextView
     private lateinit var deviceInfoText: TextView
     private lateinit var packageInfoText: TextView
@@ -46,10 +54,16 @@ class HomeFragment : Fragment() {
         webViewHelper.setup()
         logBuilder = StringBuilder()
 
+        authStatusText = view.findViewById(R.id.authStatusText)
+        logoutButton = view.findViewById(R.id.logoutButton)
         statusText = view.findViewById(R.id.statusText)
         deviceInfoText = view.findViewById(R.id.deviceInfoText)
         packageInfoText = view.findViewById(R.id.packageInfoText)
         logText = view.findViewById(R.id.logText)
+
+        logoutButton.setOnClickListener {
+            authViewModel.logout()
+        }
 
         val info = DeviceInfoHelper().getDeviceInfo()
         deviceInfoText.text = "Device: ${info.brand} ${info.model} / Android ${info.androidVersion}"
@@ -62,8 +76,8 @@ class HomeFragment : Fragment() {
             viewModel.sendPost(mapOf("key" to "value", "from" to "preset-android"))
         }
         countText = view.findViewById(R.id.countText)
-        view.findViewById<Button>(R.id.incrementButton).setOnClickListener { viewModel.increment() }
         view.findViewById<Button>(R.id.decrementButton).setOnClickListener { viewModel.decrement() }
+        view.findViewById<Button>(R.id.incrementButton).setOnClickListener { viewModel.increment() }
         view.findViewById<Button>(R.id.navigateButton).setOnClickListener {
             findNavController().navigate(R.id.action_home_to_detail)
         }
@@ -95,6 +109,16 @@ class HomeFragment : Fragment() {
                 }}
                 launch { viewModel.count.collect { count ->
                     countText.text = count.toString()
+                }}
+                launch { authViewModel.state.collect { state ->
+                    if (state.isLoggedIn) {
+                        authStatusText.text = "Logged in: ${state.username}"
+                        logoutButton.visibility = View.VISIBLE
+                    } else {
+                        authStatusText.text = "Not logged in"
+                        logoutButton.visibility = View.GONE
+                        findNavController().navigate(R.id.action_home_to_login)
+                    }
                 }}
             }
         }

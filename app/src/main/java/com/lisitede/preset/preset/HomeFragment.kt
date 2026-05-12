@@ -8,25 +8,26 @@ import android.widget.Button
 import android.widget.TextView
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.lisitede.preset.preset.api.ApiClient
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 
+    private val viewModel: HomeViewModel by viewModels()
+
     private lateinit var connectivityHelper: ConnectivityHelper
-    private lateinit var deviceInfoHelper: DeviceInfoHelper
-    private lateinit var packageInfoHelper: PackageInfoHelper
     private lateinit var webViewHelper: WebViewHelper
     private lateinit var statusText: TextView
     private lateinit var deviceInfoText: TextView
     private lateinit var packageInfoText: TextView
     private lateinit var logText: TextView
+    private lateinit var postButton: Button
+    private lateinit var countText: TextView
     private lateinit var logBuilder: StringBuilder
-    private val apiClient = ApiClient.instance
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -36,8 +37,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         connectivityHelper = ConnectivityHelper(requireContext())
-        deviceInfoHelper = DeviceInfoHelper()
-        packageInfoHelper = PackageInfoHelper(requireContext())
 
         val webView = view.findViewById<WebView>(R.id.webView)
         webViewHelper = WebViewHelper(requireContext())
@@ -50,13 +49,19 @@ class HomeFragment : Fragment() {
         packageInfoText = view.findViewById(R.id.packageInfoText)
         logText = view.findViewById(R.id.logText)
 
-        val info = deviceInfoHelper.getDeviceInfo()
+        val info = DeviceInfoHelper().getDeviceInfo()
         deviceInfoText.text = "Device: ${info.brand} ${info.model} / Android ${info.androidVersion}"
 
-        val pkgInfo = packageInfoHelper.getAppPackageInfo()
+        val pkgInfo = PackageInfoHelper(requireContext()).getAppPackageInfo()
         packageInfoText.text = "App: ${pkgInfo.packageName} ${pkgInfo.versionName}(${pkgInfo.versionCode})"
 
-        view.findViewById<Button>(R.id.postButton).setOnClickListener { sendHttpPost() }
+        view.findViewById<Button>(R.id.postButton).also { postButton = it }.setOnClickListener {
+            appendLog("POST sending...")
+            viewModel.sendPost(mapOf("key" to "value", "from" to "preset-android"))
+        }
+        countText = view.findViewById(R.id.countText)
+        view.findViewById<Button>(R.id.incrementButton).setOnClickListener { viewModel.increment() }
+        view.findViewById<Button>(R.id.decrementButton).setOnClickListener { viewModel.decrement() }
         view.findViewById<Button>(R.id.navigateButton).setOnClickListener {
             findNavController().navigate(R.id.action_home_to_detail)
         }
@@ -71,6 +76,24 @@ class HomeFragment : Fragment() {
             requireActivity().runOnUiThread {
                 appendLog("Network changed: $type")
                 updateStatus()
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.httpPostState.collect { state ->
+                    postButton.isEnabled = !state.isLoading
+                    if (!state.isLoading) {
+                        if (state.error != null) {
+                            appendLog("POST ERROR: ${state.error}")
+                        } else if (state.response.isNotEmpty()) {
+                            appendLog("POST OK: ${state.response}")
+                        }
+                    }
+                }}
+                launch { viewModel.count.collect { count ->
+                    countText.text = count.toString()
+                }}
             }
         }
     }
@@ -99,19 +122,5 @@ class HomeFragment : Fragment() {
     private fun appendLog(message: String) {
         logBuilder.insert(0, "$message\n")
         logText.text = logBuilder.toString()
-    }
-
-    private fun sendHttpPost() {
-        appendLog("POST sending...")
-        lifecycleScope.launch {
-            try {
-                val response = withContext(Dispatchers.IO) {
-                    apiClient.postTest(mapOf("key" to "value", "from" to "preset-android"))
-                }
-                appendLog("POST OK: origin=${response.origin}, url=${response.url}, data=${response.data}")
-            } catch (e: Exception) {
-                appendLog("POST ERROR: ${e.message}")
-            }
-        }
     }
 }

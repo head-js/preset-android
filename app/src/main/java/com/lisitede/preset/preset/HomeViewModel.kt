@@ -1,6 +1,8 @@
 package com.lisitede.preset.preset
 
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.lisitede.preset.preset.api.ApiClient
 import kotlinx.coroutines.Dispatchers
@@ -10,9 +12,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val prefs: SharedPreferences) : ViewModel() {
 
-    private val _count = MutableStateFlow(0)
+    companion object {
+        private const val KEY_COUNTER = "counter"
+    }
+
+    private val _count = MutableStateFlow(prefs.getInt(KEY_COUNTER, 0))
     val count: StateFlow<Int> = _count.asStateFlow()
 
     private val _httpPostState = MutableStateFlow(HttpPostState())
@@ -20,8 +26,15 @@ class HomeViewModel : ViewModel() {
 
     private val apiClient = ApiClient.instance
 
-    fun increment() { _count.value++ }
-    fun decrement() { _count.value-- }
+    fun increment() {
+        _count.value++
+        prefs.edit().putInt(KEY_COUNTER, _count.value).apply()
+    }
+
+    fun decrement() {
+        _count.value--
+        prefs.edit().putInt(KEY_COUNTER, _count.value).apply()
+    }
 
     fun sendPost(data: Map<String, @JvmSuppressWildcards String>) {
         viewModelScope.launch {
@@ -41,5 +54,11 @@ class HomeViewModel : ViewModel() {
                 )
             }
         }
+    }
+
+    class Factory(private val prefs: SharedPreferences) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T =
+            HomeViewModel(prefs) as T
     }
 }

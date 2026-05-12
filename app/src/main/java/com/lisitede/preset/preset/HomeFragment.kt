@@ -17,7 +17,9 @@ import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels {
+        HomeViewModel.Factory(requireActivity().getSharedPreferences("preset_prefs", 0))
+    }
 
     private lateinit var connectivityHelper: ConnectivityHelper
     private lateinit var webViewHelper: WebViewHelper

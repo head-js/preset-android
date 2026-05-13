@@ -28,6 +28,11 @@
             android:name=".MainActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".PlanActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Preset.Plan" />
+
     </application>
 
 </manifest>

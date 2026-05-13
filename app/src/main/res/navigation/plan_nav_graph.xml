@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/plan_nav_graph"
+    app:startDestination="@id/planPageFragment">
+
+    <fragment
+        android:id="@+id/planPageFragment"
+        android:name="com.lisitede.preset.preset.pages.PlanPageFragment"
+        android:label="Plan" />
+
+    <fragment
+        android:id="@+id/phasePageFragment"
+        android:name="com.lisitede.preset.preset.pages.PhasePageFragment"
+        android:label="Phase" />
+
+    <fragment
+        android:id="@+id/taskPageFragment"
+        android:name="com.lisitede.preset.preset.pages.TaskPageFragment"
+        android:label="Task" />
+
+</navigation>

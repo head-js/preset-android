@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/planPageFragment"
+        android:icon="@drawable/ic_home_24"
+        android:title="@string/tab_plan" />
+    <item
+        android:id="@+id/phasePageFragment"
+        android:icon="@drawable/ic_info_24"
+        android:title="@string/tab_phase" />
+    <item
+        android:id="@+id/taskPageFragment"
+        android:icon="@drawable/ic_person_24"
+        android:title="@string/tab_task" />
+</menu>

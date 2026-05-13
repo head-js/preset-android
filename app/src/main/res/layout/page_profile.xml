@@ -21,4 +21,10 @@
         android:textSize="14sp"
         android:padding="16dp" />
 
+    <Button
+        android:id="@+id/openPlanButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Plan" />
+
 </LinearLayout>

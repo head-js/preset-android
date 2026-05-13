@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         val graph = navController.navInflater.inflate(R.navigation.nav_graph)
 
         if (tokenStorage.isLoggedIn()) {
-            graph.setStartDestination(R.id.homeFragment)
+            graph.setStartDestination(R.id.homePageFragment)
         } else {
             graph.setStartDestination(R.id.loginFragment)
         }

@@ -1,4 +1,4 @@
-package com.lisitede.preset.preset
+package com.lisitede.preset.preset.pages
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -14,9 +13,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.lisitede.preset.preset.AuthRepository
+import com.lisitede.preset.preset.AuthViewModel
+import com.lisitede.preset.preset.ConnectivityHelper
+import com.lisitede.preset.preset.HomeViewModel
+import com.lisitede.preset.preset.R
+import com.lisitede.preset.preset.TokenStorage
 import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment() {
+class HomePageFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels {
         HomeViewModel.Factory(requireActivity().getSharedPreferences("preset_prefs", 0))
@@ -28,7 +33,6 @@ class HomeFragment : Fragment() {
     }
 
     private lateinit var connectivityHelper: ConnectivityHelper
-    private lateinit var webViewHelper: WebViewHelper
     private lateinit var authStatusText: TextView
     private lateinit var logoutButton: Button
     private lateinit var statusText: TextView
@@ -39,17 +43,13 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_home, container, false)
+    ): View = inflater.inflate(R.layout.page_home, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         connectivityHelper = ConnectivityHelper(requireContext())
 
-        val webView = view.findViewById<WebView>(R.id.webView)
-        webViewHelper = WebViewHelper(requireContext())
-        webViewHelper.webView = webView
-        webViewHelper.setup()
         logBuilder = StringBuilder()
 
         authStatusText = view.findViewById(R.id.authStatusText)
@@ -68,11 +68,6 @@ class HomeFragment : Fragment() {
         countText = view.findViewById(R.id.countText)
         view.findViewById<Button>(R.id.decrementButton).setOnClickListener { viewModel.decrement() }
         view.findViewById<Button>(R.id.incrementButton).setOnClickListener { viewModel.increment() }
-
-        webViewHelper.onPageStarted = { url -> appendLog("WebView loading: $url") }
-        webViewHelper.onPageFinished = { url -> appendLog("WebView loaded: $url") }
-        webViewHelper.onPageError = { error -> appendLog("WebView error: $error") }
-        webViewHelper.loadUrl("https://www.baidu.com")
 
         updateStatus()
         connectivityHelper.registerCallback { type ->
@@ -104,27 +99,16 @@ class HomeFragment : Fragment() {
                     } else {
                         authStatusText.text = "Not logged in"
                         logoutButton.visibility = View.GONE
-                        findNavController().navigate(R.id.action_home_to_login)
+                        findNavController().navigate(R.id.action_homePageFragment_to_loginFragment)
                     }
                 }}
             }
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        webViewHelper.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        webViewHelper.onPause()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         connectivityHelper.unregisterCallback()
-        webViewHelper.destroy()
     }
 
     private fun updateStatus() {

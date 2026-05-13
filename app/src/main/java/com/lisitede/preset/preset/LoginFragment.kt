@@ -59,7 +59,7 @@ class LoginFragment : Fragment() {
                         Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show()
                     }
                     if (state.isLoggedIn) {
-                        findNavController().navigate(R.id.action_login_to_home)
+                        findNavController().navigate(R.id.action_loginFragment_to_homePageFragment)
                     }
                 }
             }

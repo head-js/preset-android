@@ -9,31 +9,36 @@
         android:name="com.lisitede.preset.preset.LoginFragment"
         android:label="Login">
         <action
-            android:id="@+id/action_login_to_home"
-            app:destination="@id/homeFragment"
+            android:id="@+id/action_loginFragment_to_homePageFragment"
+            app:destination="@id/homePageFragment"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.lisitede.preset.preset.HomeFragment"
+        android:id="@+id/homePageFragment"
+        android:name="com.lisitede.preset.preset.pages.HomePageFragment"
         android:label="首页">
         <action
-            android:id="@+id/action_home_to_login"
+            android:id="@+id/action_homePageFragment_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/homeFragment"
+            app:popUpTo="@id/homePageFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.lisitede.preset.preset.DetailFragment"
+        android:id="@+id/detailPageFragment"
+        android:name="com.lisitede.preset.preset.pages.DetailPageFragment"
         android:label="详情" />
 
     <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.lisitede.preset.preset.ProfileFragment"
+        android:id="@+id/webPageFragment"
+        android:name="com.lisitede.preset.preset.pages.WebPageFragment"
+        android:label="网页" />
+
+    <fragment
+        android:id="@+id/profilePageFragment"
+        android:name="com.lisitede.preset.preset.pages.ProfilePageFragment"
         android:label="个人" />
 
 </navigation>

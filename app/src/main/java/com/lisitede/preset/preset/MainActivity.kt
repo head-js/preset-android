@@ -1,5 +1,6 @@
 package com.lisitede.preset.preset
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
@@ -12,31 +13,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val prefs = getSharedPreferences("preset_prefs", 0)
-        val tokenStorage = TokenStorage(prefs)
-
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        val graph = navController.navInflater.inflate(R.navigation.nav_graph)
-
-        if (tokenStorage.isLoggedIn()) {
-            graph.setStartDestination(R.id.homePageFragment)
-        } else {
-            graph.setStartDestination(R.id.loginFragment)
-        }
-
-        navController.setGraph(graph, intent.extras)
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
         NavigationUI.setupWithNavController(bottomNav, navController)
+    }
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.loginFragment) {
-                bottomNav.visibility = BottomNavigationView.GONE
-            } else {
-                bottomNav.visibility = BottomNavigationView.VISIBLE
-            }
-        }
+    fun navigateToLogin() {
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 }

@@ -1,4 +1,4 @@
-package com.lisitede.preset.preset
+package com.lisitede.preset.preset.pages
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,11 +12,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
+import com.lisitede.preset.preset.AuthRepository
+import com.lisitede.preset.preset.AuthViewModel
+import com.lisitede.preset.preset.LoginActivity
+import com.lisitede.preset.preset.R
+import com.lisitede.preset.preset.TokenStorage
 import kotlinx.coroutines.launch
 
-class LoginFragment : Fragment() {
+class LoginPageFragment : Fragment() {
 
     private val authViewModel: AuthViewModel by viewModels {
         val prefs = requireActivity().getSharedPreferences("preset_prefs", 0)
@@ -30,7 +34,7 @@ class LoginFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_login, container, false)
+    ): View = inflater.inflate(R.layout.page_login, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -59,7 +63,7 @@ class LoginFragment : Fragment() {
                         Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show()
                     }
                     if (state.isLoggedIn) {
-                        findNavController().navigate(R.id.action_loginFragment_to_homePageFragment)
+                        (requireActivity() as LoginActivity).navigateToMain()
                     }
                 }
             }

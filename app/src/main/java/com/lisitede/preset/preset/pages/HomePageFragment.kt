@@ -12,11 +12,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.lisitede.preset.preset.AuthRepository
 import com.lisitede.preset.preset.AuthViewModel
 import com.lisitede.preset.preset.ConnectivityHelper
 import com.lisitede.preset.preset.HomeViewModel
+import com.lisitede.preset.preset.MainActivity
 import com.lisitede.preset.preset.R
 import com.lisitede.preset.preset.TokenStorage
 import kotlinx.coroutines.launch
@@ -99,7 +99,7 @@ class HomePageFragment : Fragment() {
                     } else {
                         authStatusText.text = "Not logged in"
                         logoutButton.visibility = View.GONE
-                        findNavController().navigate(R.id.action_homePageFragment_to_loginFragment)
+                        (requireActivity() as MainActivity).navigateToLogin()
                     }
                 }}
             }

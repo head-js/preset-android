@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Preset.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@color/splash_icon_background</item>
+        <item name="postSplashScreenTheme">@style/Theme.Preset</item>
+    </style>
+
+    <style name="Theme.Preset" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#1976D2</item>
+        <item name="colorPrimaryDark">#1565C0</item>
+        <item name="colorAccent">#FF6F00</item>
+    </style>
+
+</resources>

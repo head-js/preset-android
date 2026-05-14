@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.lisitede.preset.preset.PlanActivity
 import com.lisitede.preset.preset.R
+import com.lisitede.preset.preset.TokenStorage
 
 class ProfilePageFragment : Fragment() {
 
@@ -20,9 +21,9 @@ class ProfilePageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val prefs = requireActivity().getSharedPreferences("preset_prefs", 0)
-        val token = prefs.getString("auth_token", null)
-        val username = prefs.getString("username", null)
+        val tokenStorage = TokenStorage(requireActivity().getSharedPreferences("preset_prefs", 0))
+        val token = tokenStorage.getToken()
+        val username = tokenStorage.getUsername()
 
         view.findViewById<TextView>(R.id.profileInfo).text = buildString {
             appendLine("用户: ${username ?: "未登录"}")

@@ -16,11 +16,13 @@ import com.lisitede.preset.preset.AuthRepository
 import com.lisitede.preset.preset.AuthViewModel
 import com.lisitede.preset.preset.ConnectivityHelper
 import com.lisitede.preset.preset.HomeViewModel
-import com.lisitede.preset.preset.MainActivity
+import com.lisitede.preset.preset.PageRouter
 import com.lisitede.preset.preset.R
 import com.lisitede.preset.preset.TokenStorage
+import com.therouter.router.Route
 import kotlinx.coroutines.launch
 
+@Route(path = "/main/home")
 class HomePageFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels {
@@ -99,7 +101,7 @@ class HomePageFragment : Fragment() {
                     } else {
                         authStatusText.text = "Not logged in"
                         logoutButton.visibility = View.GONE
-                        (requireActivity() as MainActivity).navigateToLogin()
+                        PageRouter.navigateAndFinish(requireActivity(), "/login")
                     }
                 }}
             }

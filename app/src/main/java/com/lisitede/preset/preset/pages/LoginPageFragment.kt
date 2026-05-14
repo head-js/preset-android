@@ -15,11 +15,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.textfield.TextInputEditText
 import com.lisitede.preset.preset.AuthRepository
 import com.lisitede.preset.preset.AuthViewModel
-import com.lisitede.preset.preset.LoginActivity
+import com.lisitede.preset.preset.PageRouter
 import com.lisitede.preset.preset.R
 import com.lisitede.preset.preset.TokenStorage
+import com.therouter.router.Route
 import kotlinx.coroutines.launch
 
+@Route(path = "/login/login")
 class LoginPageFragment : Fragment() {
 
     private val authViewModel: AuthViewModel by viewModels {
@@ -63,7 +65,7 @@ class LoginPageFragment : Fragment() {
                         Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show()
                     }
                     if (state.isLoggedIn) {
-                        (requireActivity() as LoginActivity).navigateToMain()
+                        PageRouter.navigateAndFinish(requireActivity(), "/main/home")
                     }
                 }
             }

@@ -8,7 +8,9 @@ import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.lisitede.preset.preset.R
 import com.lisitede.preset.preset.WebViewHelper
+import com.therouter.router.Route
 
+@Route(path = "/main/web")
 class WebPageFragment : Fragment() {
 
     private lateinit var webViewHelper: WebViewHelper

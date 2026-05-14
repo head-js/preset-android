@@ -8,7 +8,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.lisitede.preset.preset.R
+import com.therouter.router.Route
 
+@Route(path = "/plan/task")
 class TaskPageFragment : Fragment() {
 
     override fun onCreateView(

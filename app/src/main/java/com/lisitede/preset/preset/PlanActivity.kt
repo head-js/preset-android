@@ -9,7 +9,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.therouter.router.Route
 
+@Route(path = "/plan")
 class PlanActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +28,8 @@ class PlanActivity : AppCompatActivity() {
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.plan_bottom_nav)
         NavigationUI.setupWithNavController(bottomNav, navController)
+
+        PageRouter.navigateToPage(this)
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomNav) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

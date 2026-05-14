@@ -32,3 +32,6 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# TheRouter generated route map
+app/src/main/assets/therouter/routeMap.json

@@ -17,9 +17,9 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/backToHomeButton"
+        android:id="@+id/goToProfileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back to Home" />
+        android:text="Go to Profile" />
 
 </LinearLayout>

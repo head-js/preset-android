@@ -11,7 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.lisitede.preset.preset.DeviceInfoHelper
 import com.lisitede.preset.preset.PackageInfoHelper
 import com.lisitede.preset.preset.R
+import com.therouter.router.Route
 
+@Route(path = "/main/detail")
 class DetailPageFragment : Fragment() {
 
     override fun onCreateView(

@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
+    id("therouter")
 }
 
 android {
@@ -44,4 +46,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.core:core-splashscreen:1.0.1")
+    kapt("cn.therouter:apt:1.3.2")
+    implementation("cn.therouter:router:1.3.2")
 }

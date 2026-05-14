@@ -1,6 +1,5 @@
 package com.lisitede.preset.preset.pages
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.lisitede.preset.preset.PlanActivity
+import com.lisitede.preset.preset.PageRouter
 import com.lisitede.preset.preset.R
 import com.lisitede.preset.preset.TokenStorage
+import com.therouter.router.Route
 
+@Route(path = "/main/profile")
 class ProfilePageFragment : Fragment() {
 
     override fun onCreateView(
@@ -31,7 +32,7 @@ class ProfilePageFragment : Fragment() {
         }
 
         view.findViewById<Button>(R.id.openPlanButton).setOnClickListener {
-            startActivity(Intent(requireContext(), PlanActivity::class.java))
+            PageRouter.navigate(requireContext(), "/plan/plan")
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.lisitede.preset.preset.pages
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +8,11 @@ import android.widget.Button
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import com.lisitede.preset.preset.MainActivity
+import com.lisitede.preset.preset.PageRouter
 import com.lisitede.preset.preset.R
+import com.therouter.router.Route
 
+@Route(path = "/plan/plan")
 class PlanPageFragment : Fragment() {
 
     override fun onCreateView(
@@ -29,11 +30,8 @@ class PlanPageFragment : Fragment() {
             insets
         }
 
-        view.findViewById<Button>(R.id.backToHomeButton).setOnClickListener {
-            val intent = Intent(requireContext(), MainActivity::class.java)
-                .putExtra(MainActivity.EXTRA_TARGET_PAGE, MainActivity.TARGET_PAGE_HOME)
-            startActivity(intent)
-            requireActivity().finish()
+        view.findViewById<Button>(R.id.goToProfileButton).setOnClickListener {
+            PageRouter.navigateAndFinish(requireActivity(), "/main/profile")
         }
     }
 }

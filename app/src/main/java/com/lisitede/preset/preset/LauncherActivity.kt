@@ -1,6 +1,5 @@
 package com.lisitede.preset.preset
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -23,9 +22,9 @@ class LauncherActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             ready = true
             if (loggedIn) {
-                startActivity(Intent(this, MainActivity::class.java))
+                PageRouter.navigate(this, "/main/home")
             } else {
-                startActivity(Intent(this, LoginActivity::class.java))
+                PageRouter.navigate(this, "/login")
             }
             finish()
         }, 2000)

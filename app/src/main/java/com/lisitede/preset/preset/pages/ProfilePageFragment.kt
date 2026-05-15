@@ -4,12 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.lisitede.preset.preset.PageRouter
 import com.lisitede.preset.preset.R
 import com.lisitede.preset.preset.TokenStorage
+import com.lisitede.preset.preset.views.ProfileCardView
 import com.therouter.router.Route
 
 @Route(path = "/main/profile")
@@ -26,12 +25,9 @@ class ProfilePageFragment : Fragment() {
         val token = tokenStorage.getToken()
         val username = tokenStorage.getUsername()
 
-        view.findViewById<TextView>(R.id.profileInfo).text = buildString {
-            appendLine("用户: ${username ?: "未登录"}")
-            appendLine("Token: ${token?.take(8)?.plus("...") ?: "无"}")
-        }
-
-        view.findViewById<Button>(R.id.openPlanButton).setOnClickListener {
+        val profileCardView = view.findViewById<ProfileCardView>(R.id.profileCardView)
+        profileCardView.bind(username, token)
+        profileCardView.onGoToPlanClick = {
             PageRouter.navigate(requireContext(), "/plan/plan")
         }
     }

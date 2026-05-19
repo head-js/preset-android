@@ -47,6 +47,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.airbnb.android:lottie:6.6.3")
+    implementation("org.lynxsdk.lynx:lynx:3.7.0")
+    implementation("org.lynxsdk.lynx:lynx-jssdk:3.7.0")
+    implementation("org.lynxsdk.lynx:lynx-trace:3.7.0")
+    implementation("org.lynxsdk.lynx:primjs:3.7.0")
+    debugImplementation("org.lynxsdk.lynx:lynx-devtool:3.2.0")
     kapt("cn.therouter:apt:1.3.2")
     implementation("cn.therouter:router:1.3.2")
 }

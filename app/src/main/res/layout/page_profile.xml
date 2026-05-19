@@ -36,8 +36,21 @@
         <com.lisitede.preset.preset.views.LottieCard
             android:id="@+id/lottieCard"
             android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="200dp" />
+            android:text="Lynx Card"
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp" />
+
+        <com.lisitede.preset.preset.views.LynxCard
+            android:id="@+id/lynxCard"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
     </LinearLayout>
 

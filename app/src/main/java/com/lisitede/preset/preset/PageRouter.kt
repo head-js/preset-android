@@ -83,8 +83,10 @@ object PageRouter {
         val routeItem = matchRouteMap(pathname) ?: return
         if (!isFragment(routeItem)) return
         val navHostFragment = findNavHostFragment(activity) ?: return
-        val destId = findDestinationId(navHostFragment.navController.graph, routeItem.className) ?: return
-        navHostFragment.navController.navigate(destId)
+        val navController = navHostFragment.navController
+        val destId = findDestinationId(navController.graph, routeItem.className) ?: return
+        if (destId == navController.graph.startDestinationId) return
+        navController.navigate(destId)
     }
 
     private fun matchRouteMap(pathname: String): RouteItem? {

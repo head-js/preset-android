@@ -16,6 +16,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.lisitede.preset.preset.AuthRepository
 import com.lisitede.preset.preset.AuthViewModel
 import com.lisitede.preset.preset.PageRouter
+import com.lisitede.preset.preset.PrivacyConsentStorage
 import com.lisitede.preset.preset.R
 import com.lisitede.preset.preset.TokenStorage
 import com.therouter.router.Route
@@ -46,6 +47,8 @@ class LoginPageFragment : Fragment() {
         loginButton = view.findViewById(R.id.loginButton)
         loginProgress = view.findViewById(R.id.loginProgress)
 
+        updateLoginButtonState()
+
         loginButton.setOnClickListener {
             val username = usernameInput.text?.toString()?.trim() ?: ""
             val password = passwordInput.text?.toString()?.trim() ?: ""
@@ -60,7 +63,9 @@ class LoginPageFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 authViewModel.state.collect { state ->
                     loginProgress.visibility = if (state.isLoading) View.VISIBLE else View.GONE
-                    loginButton.isEnabled = !state.isLoading
+                    if (PrivacyConsentStorage.isPrivacyAgreed(requireContext())) {
+                        loginButton.isEnabled = !state.isLoading
+                    }
                     if (state.error != null) {
                         Toast.makeText(requireContext(), state.error, Toast.LENGTH_SHORT).show()
                     }
@@ -70,5 +75,14 @@ class LoginPageFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateLoginButtonState()
+    }
+
+    private fun updateLoginButtonState() {
+        loginButton.isEnabled = PrivacyConsentStorage.isPrivacyAgreed(requireContext())
     }
 }

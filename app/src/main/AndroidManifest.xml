@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Preset">
 
         <activity
-            android:name=".LauncherActivity"
+            android:name=".SplashActivity"
             android:theme="@style/Theme.Preset.Splash"
             android:exported="true">
             <intent-filter>

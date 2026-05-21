@@ -17,6 +17,7 @@ import com.lisitede.preset.preset.AuthViewModel
 import com.lisitede.preset.preset.ConnectivityHelper
 import com.lisitede.preset.preset.HomeViewModel
 import com.lisitede.preset.preset.PageRouter
+import com.lisitede.preset.preset.PrivacyConsentStorage
 import com.lisitede.preset.preset.R
 import com.lisitede.preset.preset.TokenStorage
 import com.therouter.router.Route
@@ -37,6 +38,7 @@ class HomePageFragment : Fragment() {
     private lateinit var connectivityHelper: ConnectivityHelper
     private lateinit var authStatusText: TextView
     private lateinit var logoutButton: Button
+    private lateinit var goToLoginButton: Button
     private lateinit var statusText: TextView
     private lateinit var logText: TextView
     private lateinit var postButton: Button
@@ -56,11 +58,16 @@ class HomePageFragment : Fragment() {
 
         authStatusText = view.findViewById(R.id.authStatusText)
         logoutButton = view.findViewById(R.id.logoutButton)
+        goToLoginButton = view.findViewById(R.id.goToLoginButton)
         statusText = view.findViewById(R.id.statusText)
         logText = view.findViewById(R.id.logText)
 
         logoutButton.setOnClickListener {
             authViewModel.logout()
+        }
+
+        goToLoginButton.setOnClickListener {
+            PageRouter.navigate(requireActivity(), "/login")
         }
 
         view.findViewById<Button>(R.id.postButton).also { postButton = it }.setOnClickListener {
@@ -98,10 +105,11 @@ class HomePageFragment : Fragment() {
                     if (state.isLoggedIn) {
                         authStatusText.text = "Logged in: ${state.username}"
                         logoutButton.visibility = View.VISIBLE
+                        goToLoginButton.visibility = View.GONE
                     } else {
                         authStatusText.text = "Not logged in"
                         logoutButton.visibility = View.GONE
-                        PageRouter.navigateAndFinish(requireActivity(), "/login")
+                        goToLoginButton.visibility = View.VISIBLE
                     }
                 }}
             }

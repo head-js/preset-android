@@ -52,6 +52,8 @@ dependencies {
     implementation("org.lynxsdk.lynx:lynx-trace:3.7.0")
     implementation("org.lynxsdk.lynx:primjs:3.7.0")
     debugImplementation("org.lynxsdk.lynx:lynx-devtool:3.2.0")
+    implementation("com.appsflyer:af-android-sdk:6.17.3")
+    implementation("com.android.installreferrer:installreferrer:2.2")
     kapt("cn.therouter:apt:1.3.2")
     implementation("cn.therouter:router:1.3.2")
 }

@@ -40,6 +40,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
+                android:textColor="#888888"
+                android:layout_marginBottom="2dp" />
+
+            <TextView
+                android:id="@+id/cardAfId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Af Id: -"
+                android:textSize="13sp"
                 android:textColor="#888888" />
 
         </LinearLayout>

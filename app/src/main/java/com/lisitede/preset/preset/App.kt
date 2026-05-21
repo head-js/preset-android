@@ -7,6 +7,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        AppsFlyerHelper.initIfAllowed(this)
         LynxEnv.inst().init(this, null, null, null)
     }
 }

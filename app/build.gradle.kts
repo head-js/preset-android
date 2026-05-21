@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.kapt")
     id("therouter")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
@@ -15,6 +16,22 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    flavorDimensions += "profile"
+
+    productFlavors {
+        create("dev") {
+            dimension = "profile"
+        }
+
+        create("prd") {
+            dimension = "profile"
+        }
     }
 
     buildTypes {
@@ -31,6 +48,11 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+}
+
+secrets {
+    propertiesFileName = "local.properties"
+    defaultPropertiesFileName = "local.defaults.properties"
 }
 
 dependencies {

@@ -12,6 +12,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        AppsFlyerHelper.initIfAllowed(application)
+
         if (!PrivacyConsentStorage.isPrivacyAgreed(this)) {
             showPrivacyDialog()
         }
@@ -23,6 +25,7 @@ class LoginActivity : AppCompatActivity() {
             .setMessage("请先同意隐私协议以继续使用")
             .setPositiveButton("同意") { _, _ ->
                 PrivacyConsentStorage.setPrivacyAgreed(this)
+                AppsFlyerHelper.initIfAllowed(application)
             }
             .setNegativeButton("拒绝", null)
             .setCancelable(false)

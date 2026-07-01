@@ -77,6 +77,8 @@ dependencies {
     debugImplementation("org.lynxsdk.lynx:lynx-devtool:3.2.0")
     implementation("com.appsflyer:af-android-sdk:6.17.3")
     implementation("com.android.installreferrer:installreferrer:2.2")
+    implementation("com.github.kongzue.DialogX:DialogX:0.0.49")
+    implementation("com.github.xiaohaibin:XBanner:1.9.1")
     kapt("cn.therouter:apt:1.3.2")
     implementation("cn.therouter:router:1.3.2")
 }

@@ -10,11 +10,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.lisitede.preset.deviceinfo.AppInfoRepository
+import com.lisitede.preset.deviceinfo.DeviceIdentityRepository
+import com.lisitede.preset.deviceinfo.DeviceInfoEntry
 import com.lisitede.preset.deviceinfo.DeviceInfoRepository
 import com.lisitede.preset.preset.App
-import com.lisitede.preset.preset.AppPackageInfo
-import com.lisitede.preset.preset.PackageInfoHelper
 import com.lisitede.preset.preset.R
+import com.lisitede.preset.preset.dialog.DetailInfoDialogData
+import com.lisitede.preset.preset.dialog.DetailInfoDialogRenderer
 import com.therouter.router.Route
 
 private data class DisplayItem(
@@ -34,11 +37,11 @@ class DetailPageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val app = requireContext().applicationContext as App
-        val repo = app.deviceInfoRepository
-        val packageInfoHelper = PackageInfoHelper(requireContext())
-        val pkgInfo = packageInfoHelper.getAppPackageInfo()
+        val identityRepo = app.deviceIdentityRepository
+        val deviceInfoRepo = app.deviceInfoRepository
+        val appInfoRepo = AppInfoRepository(requireContext())
 
-        val items = buildDisplayItems(repo, pkgInfo)
+        val items = buildDisplayItems(deviceInfoRepo)
 
         val container = view.findViewById<LinearLayout>(R.id.detailList)
         items.forEach { item ->
@@ -53,75 +56,33 @@ class DetailPageFragment : Fragment() {
         view.findViewById<Button>(R.id.backButton).setOnClickListener {
             findNavController().popBackStack()
         }
-    }
 
-    private fun buildDisplayItems(
-        repo: DeviceInfoRepository,
-        pkgInfo: AppPackageInfo
-    ): List<DisplayItem> {
-        val groups = listOf(
-            "Identity" to repo.getIdentity(),
-            "Profile" to repo.getProfile(),
-            "Fingerprint" to repo.getFingerprint(),
-            "Risk" to repo.getRisk(),
-            "App" to mapOf(
-                "appName" to pkgInfo.appName,
-                "packageName" to pkgInfo.packageName,
-                "versionName" to (pkgInfo.versionName ?: "unknown"),
-                "versionCode" to pkgInfo.versionCode.toString()
+        view.findViewById<Button>(R.id.showDetailInfoDialogButton).setOnClickListener {
+            val dialogData = DetailInfoDialogData(
+                appInfo = appInfoRepo.getAppInfo().toList(),
+                identityInfo = identityRepo.getIdentity().toList()
             )
-        )
-        return buildList {
-            groups.forEach { (groupName, values) ->
-                val visibleValues = values.filterValues { it.isNotEmpty() }
-                if (visibleValues.isNotEmpty()) {
-                    add(DisplayItem(groupName, "", isSection = true))
-                    visibleValues.forEach { (key, value) ->
-                        add(DisplayItem(displayLabel(key), value))
-                    }
-                }
-            }
+            DetailInfoDialogRenderer(dialogData).show()
         }
     }
 
-    private fun displayLabel(key: String): String {
-        return when (key) {
-            "brand" -> "Brand"
-            "model" -> "Model"
-            "manufacturer" -> "Manufacturer"
-            "device" -> "Device"
-            "product" -> "Product"
-            "versionRelease" -> "Android Version"
-            "versionSdkInt" -> "SDK Int"
-            "board" -> "Board"
-            "hardware" -> "Hardware"
-            "display" -> "Display"
-            "fingerprint" -> "Fingerprint"
-            "id" -> "Build ID"
-            "serial" -> "Serial"
-            "androidId" -> "Android ID"
-            "widevineDeviceId" -> "Widevine Device ID"
-            "line1Number" -> "Line1Number"
-            "simOperator" -> "SIM Operator"
-            "networkOperator" -> "Network Operator"
-            "simState" -> "SIM State"
-            "simOperatorName" -> "SIM Operator Name"
-            "oaid" -> "OAID"
-            "vaid" -> "VAID"
-            "aaid" -> "AAID"
-            "gaid" -> "GAID"
-            "imei" -> "IMEI"
-            "imsi" -> "IMSI"
-            "iccid" -> "ICCID"
-            "device_memory" -> "Device Memory"
-            "device_advertised_memory" -> "Device Advertised Memory"
-            "appName" -> "App Name"
-            "packageName" -> "Package Name"
-            "versionName" -> "Version Name"
-            "versionCode" -> "Version Code"
-            "ro_build_version_harmony_type" -> "ro.build.version.harmony_type"
-            "hw_sc_build_platform_version" -> "hw_sc.build.platform.version"
-            else -> key.replace('_', '.')
+    private fun buildDisplayItems(deviceInfoRepo: DeviceInfoRepository): List<DisplayItem> {
+        val groups: List<Pair<String, Array<DeviceInfoEntry>>> = listOf(
+            "Profile" to deviceInfoRepo.getProfile(),
+            "Fingerprint" to deviceInfoRepo.getFingerprint(),
+            "Risk" to deviceInfoRepo.getRisk()
+        )
+        return buildList {
+            groups.forEach { (groupName, values) ->
+                val visibleValues = values
+                    .filter { entry -> entry.value.isNotEmpty() }
+                if (visibleValues.isNotEmpty()) {
+                    add(DisplayItem(groupName, "", isSection = true))
+                    visibleValues.forEach { entry ->
+                        add(DisplayItem(entry.label, entry.value))
+                    }
+                }
+            }
         }
     }
 

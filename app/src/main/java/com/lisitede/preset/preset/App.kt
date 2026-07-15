@@ -2,6 +2,7 @@ package com.lisitede.preset.preset
 
 import android.app.Application
 import com.lynx.tasm.LynxEnv
+import com.lisitede.preset.deviceinfo.DeviceInfoRepository
 
 class App : Application() {
 

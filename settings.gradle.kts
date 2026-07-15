@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "preset-android"
 include(":app")
+include(":deviceinfo")

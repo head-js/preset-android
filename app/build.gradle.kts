@@ -56,6 +56,7 @@ secrets {
 }
 
 dependencies {
+    implementation(project(":deviceinfo"))
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
@@ -76,8 +77,6 @@ dependencies {
     debugImplementation("org.lynxsdk.lynx:lynx-devtool:3.2.0")
     implementation("com.appsflyer:af-android-sdk:6.17.3")
     implementation("com.android.installreferrer:installreferrer:2.2")
-    implementation("com.github.gzu-liyujiang:Android_CN_OAID:4.2.16")
-    implementation("com.google.android.gms:play-services-ads-identifier:18.1.0")
     kapt("cn.therouter:apt:1.3.2")
     implementation("cn.therouter:router:1.3.2")
 }

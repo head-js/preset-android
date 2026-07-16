@@ -3,113 +3,142 @@ package com.lisitede.preset.deviceinfo
 import android.content.Context
 import com.lisitede.preset.deviceinfo.collectors.BatteryInfoCollector
 import com.lisitede.preset.deviceinfo.collectors.BuildInfoCollector
+import com.lisitede.preset.deviceinfo.collectors.ConnectivityInfoCollector
+import com.lisitede.preset.deviceinfo.collectors.CpuInfoCollector
+import com.lisitede.preset.deviceinfo.collectors.DeveloperInfoCollector
 import com.lisitede.preset.deviceinfo.collectors.DisplayInfoCollector
-import com.lisitede.preset.deviceinfo.collectors.FingerprintCollector
-import com.lisitede.preset.deviceinfo.collectors.IdentityInfoCollector
+import com.lisitede.preset.deviceinfo.collectors.LocaleInfoCollector
 import com.lisitede.preset.deviceinfo.collectors.MemoryInfoCollector
 import com.lisitede.preset.deviceinfo.collectors.PowerInfoCollector
+import com.lisitede.preset.deviceinfo.collectors.RomInfoCollector
+import com.lisitede.preset.deviceinfo.collectors.StorageInfoCollector
 import com.lisitede.preset.deviceinfo.collectors.TelephonyInfoCollector
 
 class DeviceInfoRepository(context: Context) {
     private val buildInfoCollector = BuildInfoCollector()
-    private val identityInfoCollector = IdentityInfoCollector(context)
+    private val connectivityInfoCollector = ConnectivityInfoCollector(context)
     private val telephonyInfoCollector = TelephonyInfoCollector(context)
-    private val fingerprintCollector = FingerprintCollector()
+    private val romInfoCollector = RomInfoCollector()
+    private val localeInfoCollector = LocaleInfoCollector(context)
+    private val cpuInfoCollector = CpuInfoCollector()
+    private val developerInfoCollector = DeveloperInfoCollector(context)
     private val displayInfoCollector = DisplayInfoCollector(context)
     private val memoryInfoCollector = MemoryInfoCollector(context)
+    private val storageInfoCollector = StorageInfoCollector()
     private val batteryInfoCollector = BatteryInfoCollector(context)
     private val powerInfoCollector = PowerInfoCollector(context)
 
-    fun getIdentity(): Map<String, String> {
-        val info = identityInfoCollector.getIdentifierInfo()
-        return mapOf(
-            "oaid" to info.oaid,
-            "vaid" to info.vaid,
-            "aaid" to info.aaid,
-            "gaid" to info.gaid,
-            "androidId" to info.androidId,
-            "widevineDeviceId" to info.widevineDeviceId,
-            "imei" to info.imei
+    fun getProfile(): Array<DeviceInfoEntry> {
+        val build = buildInfoCollector.getBuildInfo()
+        return arrayOf(
+            build.brand,
+            build.model,
+            build.manufacturer,
+            build.device,
+            build.product
         )
     }
 
-    fun getProfile(): Map<String, String> {
+    fun getFingerprint(): Array<DeviceInfoEntry> {
         val build = buildInfoCollector.getBuildInfo()
-        return mapOf(
-            "brand" to build.brand,
-            "model" to build.model,
-            "manufacturer" to build.manufacturer,
-            "device" to build.device,
-            "product" to build.product
-        )
-    }
-
-    fun getFingerprint(): Map<String, String> {
-        val build = buildInfoCollector.getBuildInfo()
+        val connectivityInfo = connectivityInfoCollector.getConnectivityInfo()
+        val localeInfo = localeInfoCollector.getLocaleInfo()
         val telephony = telephonyInfoCollector.getTelephonyInfo()
-        val rom = fingerprintCollector.getRomInfo()
+        val rom = romInfoCollector.getRomInfo()
+        val cpuInfo = cpuInfoCollector.getCpuInfo()
         val displayInfo = displayInfoCollector.getDisplayInfo()
         val memoryInfo = memoryInfoCollector.getMemoryInfo()
-        return mapOf(
-            "versionRelease" to build.versionRelease,
-            "versionSdkInt" to build.versionSdkInt.toString(),
-            "board" to build.board,
-            "hardware" to build.hardware,
-            "display" to build.display,
-            "fingerprint" to build.fingerprint,
-            "id" to build.id,
-            "serial" to build.serial,
-            "display_physical_width" to displayInfo.physicalWidth?.toString().orEmpty(),
-            "display_physical_height" to displayInfo.physicalHeight?.toString().orEmpty(),
-            "display_refresh_rate" to displayInfo.refreshRate?.toString().orEmpty(),
-            "display_rotation" to displayInfo.rotation?.toString().orEmpty(),
-            "display_state" to displayInfo.state?.toString().orEmpty(),
-            "display_is_hdr" to displayInfo.isHdr?.toString().orEmpty(),
-            "display_is_wide_color_gamut" to displayInfo.isWideColorGamut?.toString().orEmpty(),
-            "device_memory" to memoryInfo.totalMemory?.toString().orEmpty(),
-            "device_advertised_memory" to memoryInfo.advertisedMemory?.toString().orEmpty(),
-            "imsi" to telephony.imsi,
-            "iccid" to telephony.iccid,
-            "line1Number" to telephony.line1Number,
-            "simOperator" to telephony.simOperator,
-            "networkOperator" to telephony.networkOperator,
-            "simState" to telephony.simState,
-            "simOperatorName" to telephony.simOperatorName,
-            "ro_miui_ui_version_name" to rom.ro_miui_ui_version_name,
-            "ro_miui_ui_version_code" to rom.ro_miui_ui_version_code,
-            "ro_mi_os_version_name" to rom.ro_mi_os_version_name,
-            "ro_mi_os_version_code" to rom.ro_mi_os_version_code,
-            "ro_mi_os_version_incremental" to rom.ro_mi_os_version_incremental,
-            "ro_build_version_emui" to rom.ro_build_version_emui,
-            "ro_build_version_magic" to rom.ro_build_version_magic,
-            "ro_build_version_opporom" to rom.ro_build_version_opporom,
-            "ro_build_version_oplusrom" to rom.ro_build_version_oplusrom,
-            "ro_build_version_realmeui" to rom.ro_build_version_realmeui,
-            "ro_vivo_os_name" to rom.ro_vivo_os_name,
-            "ro_vivo_os_version" to rom.ro_vivo_os_version,
-            "ro_vivo_rom" to rom.ro_vivo_rom,
-            "ro_vivo_rom_version" to rom.ro_vivo_rom_version,
-            "ro_build_version_oneui" to rom.ro_build_version_oneui,
-            "ro_flyme_published" to rom.ro_flyme_published,
-            "ro_meizu_setupwizard_flyme" to rom.ro_meizu_setupwizard_flyme,
-            "ro_smartisan_version" to rom.ro_smartisan_version,
-            "ro_letv_release_version" to rom.ro_letv_release_version,
-            "ro_lenovo_lvp_version" to rom.ro_lenovo_lvp_version,
-            "ro_build_nubia_rom_name" to rom.ro_build_nubia_rom_name,
-            "ro_build_nubia_rom_code" to rom.ro_build_nubia_rom_code,
-            "ro_build_version_oxygen" to rom.ro_build_version_oxygen,
-            "ro_build_version_harmony" to rom.ro_build_version_harmony,
-            "ro_build_version_harmony_type" to rom.ro_build_version_harmony_type,
-            "hw_sc_build_platform_version" to rom.hw_sc_build_platform_version
+        val storageInfo = storageInfoCollector.getStorageInfo()
+        return arrayOf(
+            build.version_release,
+            build.version_incremental,
+            build.version_security_patch,
+            build.version_sdk_int,
+            build.build_time,
+            build.board,
+            build.hardware,
+            build.bootloader,
+            build.supported_abis,
+            cpuInfo.cores_count,
+            build.display,
+            build.fingerprint,
+            build.id,
+            build.tags,
+            build.host,
+            build.serial,
+            rom.vb_meta_digest,
+            localeInfo.default_input_method,
+            localeInfo.language,
+            localeInfo.country,
+            localeInfo.timezone,
+            displayInfo.display_physical_width,
+            displayInfo.display_physical_height,
+            displayInfo.display_refresh_rate,
+            displayInfo.display_rotation,
+            displayInfo.display_state,
+            displayInfo.display_is_hdr,
+            displayInfo.display_is_wide_color_gamut,
+            memoryInfo.device_memory,
+            memoryInfo.device_advertised_memory,
+            storageInfo.device_storage,
+            connectivityInfo.connectivity_type,
+            connectivityInfo.http_proxy,
+            telephony.imsi,
+            telephony.iccid,
+            telephony.line1_number,
+            telephony.sim_operator,
+            telephony.network_operator,
+            telephony.sim_country_iso,
+            telephony.network_country_iso,
+            telephony.data_roaming,
+            telephony.data_roaming_enabled,
+            telephony.subscription_data_roaming,
+            telephony.data_network_type,
+            telephony.sim_state,
+            telephony.sim_operator_name,
+            rom.ro_miui_ui_version_name,
+            rom.ro_miui_ui_version_code,
+            rom.ro_mi_os_version_name,
+            rom.ro_mi_os_version_code,
+            rom.ro_mi_os_version_incremental,
+            rom.ro_build_version_emui,
+            rom.ro_build_version_magic,
+            rom.ro_build_version_opporom,
+            rom.ro_build_version_oplusrom,
+            rom.ro_build_version_realmeui,
+            rom.ro_vivo_os_name,
+            rom.ro_vivo_os_version,
+            rom.ro_vivo_rom,
+            rom.ro_vivo_rom_version,
+            rom.ro_build_version_oneui,
+            rom.ro_flyme_published,
+            rom.ro_meizu_setupwizard_flyme,
+            rom.ro_smartisan_version,
+            rom.ro_letv_release_version,
+            rom.ro_lenovo_lvp_version,
+            rom.ro_build_nubia_rom_name,
+            rom.ro_build_nubia_rom_code,
+            rom.ro_build_version_oxygen,
+            rom.ro_build_version_harmony,
+            rom.ro_build_version_harmony_type,
+            rom.hw_sc_build_platform_version
         )
     }
 
-    fun getRisk(): Map<String, String> {
+    fun getRisk(): Array<DeviceInfoEntry> {
         val batteryInfo = batteryInfoCollector.getBatteryInfo()
+        val developerInfo = developerInfoCollector.getDeveloperInfo()
+        val localeInfo = localeInfoCollector.getLocaleInfo()
         val powerInfo = powerInfoCollector.getPowerInfo()
-        return mapOf(
-            "battery_level" to batteryInfo.level?.toString().orEmpty(),
-            "battery_low_power_mode" to powerInfo.isLowPowerMode?.toString().orEmpty()
+        return arrayOf(
+            localeInfo.accessibility_enabled,
+            developerInfo.adb_enabled,
+            developerInfo.development_setting_enabled,
+            batteryInfo.battery_level,
+            batteryInfo.battery_status,
+            batteryInfo.battery_health_status,
+            batteryInfo.battery_temperature,
+            powerInfo.battery_low_power_mode
         )
     }
 }

@@ -2,16 +2,18 @@ package com.lisitede.preset.deviceinfo.collectors
 
 import android.content.Context
 import android.os.PowerManager
+import com.lisitede.preset.deviceinfo.DeviceInfoEntry
 
 internal data class PowerInfo(
-    val isLowPowerMode: Boolean?
+    /** 当前是否启用省电模式。 */
+    val battery_low_power_mode: DeviceInfoEntry
 )
 
 /**
  * Android 电源管理策略的原始只读结果。
  *
- * [isLowPowerMode] 直接读取 [PowerManager.isPowerSaveMode]，不转换为自定义状态或等级。
- * PowerManager 不存在或读取异常时返回 null，由 Repository 在公开 Map 边界序列化为空字符串。
+ * [PowerInfo.battery_low_power_mode] 直接读取 [PowerManager.isPowerSaveMode]，不转换为自定义状态或等级。
+ * PowerManager 不存在或读取异常时由 Collector 转换为空字符串。
  *
  * - 声明：不需要权限。
  * - 弹窗：不触发。
@@ -29,11 +31,15 @@ internal class PowerInfoCollector(context: Context) {
 
     fun getPowerInfo(): PowerInfo {
         return PowerInfo(
-            isLowPowerMode = try {
-                powerManager?.isPowerSaveMode
-            } catch (_: Throwable) {
-                null
-            }
+            battery_low_power_mode = DeviceInfoEntry(
+                "battery_low_power_mode",
+                try {
+                    powerManager?.isPowerSaveMode?.toString().orEmpty()
+                } catch (_: Throwable) {
+                    ""
+                },
+                "Battery Low Power Mode"
+            )
         )
     }
 }

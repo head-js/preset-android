@@ -3,21 +3,23 @@ package com.lisitede.preset.deviceinfo.collectors
 import android.app.ActivityManager
 import android.content.Context
 import android.os.Build
+import com.lisitede.preset.deviceinfo.DeviceInfoEntry
 
 internal data class MemoryInfo(
-    val totalMemory: Long?,
-    val advertisedMemory: Long?
+    /** 内核可访问的总内存，单位为 byte，API 16+。 */
+    val device_memory: DeviceInfoEntry,
+    /** 面向消费者标称的系统内存，单位为 byte，API 34+；低版本为空。 */
+    val device_advertised_memory: DeviceInfoEntry
 )
 
 /**
  * Android Framework 报告的设备内存原始只读结果，单位均为 byte。
  *
- * [totalMemory] 直接读取 [ActivityManager.MemoryInfo.totalMem]，表示内核可访问的总内存。
- * [advertisedMemory] 在 API 34+ 直接读取 [ActivityManager.MemoryInfo.advertisedMem]，表示面向
+ * [MemoryInfo.device_memory] 直接读取 [ActivityManager.MemoryInfo.totalMem]，表示内核可访问的总内存。
+ * [MemoryInfo.device_advertised_memory] 在 API 34+ 直接读取 [ActivityManager.MemoryInfo.advertisedMem]，表示面向
  * 消费者标称的系统内存。两者语义不同，不互相替代，也不换算为 KB、MB 或 GB。
  *
- * ActivityManager 不存在、读取异常或 API 不可用时返回 null，由 Repository 在公开 Map 边界
- * 序列化为空字符串。
+ * ActivityManager 不存在、读取异常或 API 不可用时由 Collector 转换为空字符串。
  *
  * - 声明：不需要权限。
  * - 弹窗：不触发。
@@ -36,21 +38,30 @@ internal class MemoryInfoCollector(context: Context) {
         .getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
 
     fun getMemoryInfo(): MemoryInfo {
-        val manager = activityManager ?: return MemoryInfo(null, null)
+        val manager = activityManager ?: return emptyInfo()
         val frameworkInfo = ActivityManager.MemoryInfo()
         try {
             manager.getMemoryInfo(frameworkInfo)
         } catch (_: Throwable) {
-            return MemoryInfo(null, null)
+            return emptyInfo()
         }
 
         return MemoryInfo(
-            totalMemory = frameworkInfo.totalMem,
-            advertisedMemory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                frameworkInfo.advertisedMem
-            } else {
-                null
-            }
+            device_memory = DeviceInfoEntry("device_memory", frameworkInfo.totalMem.toString(), "Device Memory"),
+            device_advertised_memory = DeviceInfoEntry(
+                "device_advertised_memory",
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    frameworkInfo.advertisedMem.toString()
+                } else "",
+                "Device Advertised Memory"
+            )
+        )
+    }
+
+    private fun emptyInfo(): MemoryInfo {
+        return MemoryInfo(
+            DeviceInfoEntry("device_memory", "", "Device Memory"),
+            DeviceInfoEntry("device_advertised_memory", "", "Device Advertised Memory")
         )
     }
 }

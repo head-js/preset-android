@@ -6,6 +6,7 @@ import android.telephony.TelephonyManager
 import com.github.gzuliyujiang.oaid.DeviceIdentifier
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.lisitede.preset.deviceinfo.DeviceInfoEntry
 
 /**
  * 设备标识族读取结果。各字段的声明/弹窗/PII 详见对应 read* 方法的 KDoc。
@@ -16,8 +17,8 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
  *   当前 Android_CN_OAID 封装只在本仓库实际接入 [oaid]，[vaid] / [aaid] 因 [DeviceIdentifier] 未暴露接口而留空占位。
  * - Google 体系：[gaid] 走 Google Play Services 通道，依赖设备有 GMS。Google 文档也常称它为 Advertising ID / Ad ID /
  *   AAID；此处命名为 `gaid`，用于和 MSA 的 [aaid] 区分。
- * - Android Framework：[androidId]（SSAID）由系统直接提供，与 MSA / Google 广告标识体系均无关。
- * - DRM 体系：[widevineDeviceId] 属于内容版权保护场景的设备证书标识，不属于广告、归因或用户统计标识。
+ * - Android Framework：[android_id]（SSAID）由系统直接提供，与 MSA / Google 广告标识体系均无关。
+ * - DRM 体系：[widevine_device_id] 属于内容版权保护场景的设备证书标识，不属于广告、归因或用户统计标识。
  *
  * 业界使用习惯：
  * - 广告投放、广告归因、反作弊归因：国内 Android 分发生态通常优先使用 [oaid]；Google Play / 海外 GMS 生态通常优先使用
@@ -28,19 +29,25 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException
  *   SDK 清单、数据安全披露中说明用途，并尊重厂商提供的关闭、重置或空值返回。
  * - [vaid] 适合同一开发者主体下的多应用推荐、统计或风控关联；[aaid] 适合单应用内匿名统计。二者关联范围小于 [oaid]，
  *   但当前实现未真正读取，调用方不应依赖其有值。
- * - [androidId] 更适合应用自身的非广告类匿名状态关联或诊断兜底。Android 8.0+ 上它按应用签名、用户和设备分区，不是全局
+ * - [android_id] 更适合应用自身的非广告类匿名状态关联或诊断兜底。Android 8.0+ 上它按应用签名、用户和设备分区，不是全局
  *   广告 ID；不应用它规避广告 ID 的用户重置/删除选择。
- * - [widevineDeviceId] 只应作为 DRM 能力/异常排查信息看待；该接口存在兼容性风险，也不应用于业务画像、广告归因或跨应用追踪。
+ * - [widevine_device_id] 只应作为 DRM 能力/异常排查信息看待；该接口存在兼容性风险，也不应用于业务画像、广告归因或跨应用追踪。
  */
-data class IdentifierInfo(
-    // MSA 匿名标识族
-    val oaid: String,             // OAID (Open Anonymous Identifier)
-    val vaid: String,             // VAID，DeviceIdentifier 未暴露 getVAID 方法
-    val aaid: String,             // AAID，DeviceIdentifier 未暴露 getAAID 方法
-    val gaid: String,             // GAID (Google Advertising ID)
-    val androidId: String,        // Android ID (SSAID)
-    val widevineDeviceId: String, // Widevine Device ID (DRM)
-    val imei: String              // IMEI，库内 fallback 已含 MEID
+internal data class IdentifierInfo(
+    /** OAID (Open Anonymous Identifier)。 */
+    val oaid: DeviceInfoEntry,
+    /** VAID；DeviceIdentifier 未暴露 getVAID 方法。 */
+    val vaid: DeviceInfoEntry,
+    /** AAID；DeviceIdentifier 未暴露 getAAID 方法。 */
+    val aaid: DeviceInfoEntry,
+    /** GAID (Google Advertising ID)。 */
+    val gaid: DeviceInfoEntry,
+    /** Android ID (SSAID)。 */
+    val android_id: DeviceInfoEntry,
+    /** Widevine Device ID (DRM)。 */
+    val widevine_device_id: DeviceInfoEntry,
+    /** IMEI；库内 fallback 已含 MEID。 */
+    val imei: DeviceInfoEntry
 )
 
 internal class IdentityInfoCollector(context: Context) {
@@ -52,14 +59,18 @@ internal class IdentityInfoCollector(context: Context) {
 
     fun getIdentifierInfo(): IdentifierInfo {
         return IdentifierInfo(
-            oaid = readOaid(),
+            oaid = DeviceInfoEntry("oaid", readOaid(), "OAID"),
             // DeviceIdentifier 未暴露 getVAID / getAAID 方法。
-            vaid = "",
-            aaid = "",
-            androidId = readAndroidId(),
-            gaid = readGaid(),
-            widevineDeviceId = readWidevineDeviceId(),
-            imei = readImei()
+            vaid = DeviceInfoEntry("vaid", "", "VAID"),
+            aaid = DeviceInfoEntry("aaid", "", "AAID"),
+            gaid = DeviceInfoEntry("gaid", readGaid(), "GAID"),
+            android_id = DeviceInfoEntry("android_id", readAndroidId(), "Android ID"),
+            widevine_device_id = DeviceInfoEntry(
+                "widevine_device_id",
+                readWidevineDeviceId(),
+                "Widevine Device ID"
+            ),
+            imei = DeviceInfoEntry("imei", readImei(), "IMEI")
         )
     }
 

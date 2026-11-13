@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.lisitede.preset.preset"
-        minSdk = 21
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -59,6 +59,7 @@ dependencies {
     implementation(project(":deviceinfo"))
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.exifinterface:exifinterface:1.3.7")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")

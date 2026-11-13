@@ -8,4 +8,9 @@
     <string name="tab_plan">计划</string>
     <string name="tab_phase">阶段</string>
     <string name="tab_task">任务</string>
+    <string name="change_avatar">更换头像</string>
+    <string name="avatar_load_failed">无法读取这张图片，请选择其他图片</string>
+    <string name="album_saving">正在新增图片到相册…</string>
+    <string name="album_save_success">已新增到相册：%1$s</string>
+    <string name="album_save_failed">新增图片失败，请重试</string>
 </resources>
